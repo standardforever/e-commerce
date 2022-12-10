@@ -1,0 +1,158 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!-- <!==========navbar STARTS ============-->
+<div class="container">
+
+  <!-- <!==========Home and All product  navbar button STARTS ============-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        
+        <li class="nav-item">
+          <a class="nav-link" href="/">All product</a>
+        </li>
+        <!-- <!==========Home and ALl product navbar button ENDS ============-->
+
+        <!-- <!==========Brands navbar button STARTS ============-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+            Brands
+          </a>
+          <div class="dropdown-menu">
+            {% for brand in brands %}
+            <a class="dropdown-item" href="{{ url_for('get_brand', id=brand.id) }}">{{ brand.name }}</a>
+            {% endfor %}
+
+          </div>
+        </li>
+
+        <!-- <!==========  brands button navbar ENDS ============-->
+
+         <!-- <!========== categories  button navbar STARTS ============-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+            Categories
+          </a>
+          <div class="dropdown-menu">
+            {% for category in categories %}
+            <a class="dropdown-item" href="{{ url_for('get_category', id=category.id) }}">{{ category.name }}</a>
+            {% endfor %}
+
+          </div>
+        </li>
+
+         <!-- <!========== categories button navbar ENDS ============-->
+        <li class="nav-item">
+          <a class="nav-link disabled">Disabled</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+</div>
+
+<!-- <!========== navbar ENDS ============-->
+<div class="container">
+    <div class="row">
+   <!--========== List all product of same brands START ============-->
+  {% if brand %}  
+  {% for b in brand %}
+        <div class="col-md-3 mt-3">
+            <div class="card">
+                <img src="{{ url_for('static', filename='images/' + b.image_1) }}" alt="{{ b.name }}" class="card-img-top" height="200px">
+                <div class="card-body">
+                  {% if b.discount > 0 %}
+                  <p style="text-shadow: 1px 1px 2px #000; color: #f00; transform: rotate(-15deg); position: absolute; top: 20%; left: 20%;"> Discount {{ b.discount }} %</p>
+                  {% endif %}
+                    <h5 class="text-center">{{ b.name }}</h5>
+                    <p class="text-center">Price ${{ b.price }}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="'float-left btn btn-sm btn-primary">Details</a>
+                    <a href="#" class="'float-right btn btn-sm btn-warning">Add to cart</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %} 
+      </div>
+         <!--==========List all product of same brands ENDS ============-->
+
+         <!--==========List all product of same categories START ============-->
+  {% elif get_cat_prod %}
+  {% for get_cat in get_cat_prod %}
+  <div class="row">
+      <div class="col-md-3 mt-3">
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/' + get_cat.image_1) }}" alt="{{ get_cat.name }}" class="card-img-top" height="200px">
+            <div class="card-body">
+              {% if get_cat.discount > 0 %}
+              <p style="text-shadow: 1px 1px 2px #000; color: #f00; transform: rotate(-15deg); position: absolute; top: 20%; left: 20%;"> Discount {{ get_cat.discount }} %</p>
+              {% endif %}
+                <h5 class="text-center">{{ get_cat.name }}</h5>
+                <p class="text-center">Price ${{ get_cat.price }}</p>
+            </div>
+            <div class="card-footer">
+                <a href="#" class="'float-left btn btn-sm btn-primary">Details</a>
+                <a href="#" class="'float-right btn btn-sm btn-warning">Add to cart</a>
+            </div>
+        </div>
+    </div>
+
+  {% endfor %}
+</div>
+
+   <!--==========List all product of same categories ENDS ============-->
+
+   <!--==========List all product  START ============-->
+
+   <div class="row">
+  {% else %}
+        {% for product in products.items %}
+        <div class="col-md-3 mt-3">
+            <div class="card">
+                <img src="{{ url_for('static', filename='images/' + product.image_1) }}" alt="{{ product.name }}" class="card-img-top" height="200px">
+                <div class="card-body">
+                  {% if product.discount > 0 %}
+                  <p style="text-shadow: 1px 1px 2px #000; color: #f00; transform: rotate(-15deg); position: absolute; top: 20%; left: 20%;"> Discount {{ product.discount }} %</p>
+                  {% endif %}
+                    <h5 class="text-center">{{ product.name }}</h5>
+                    <p class="text-center">Price ${{ product.price }}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="'float-left btn btn-sm btn-primary">Details</a>
+                    <a href="#" class="'float-right btn btn-sm btn-warning">Add to cart</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="row">
+        <div class="col text-center">
+        {% for page_num in products.iter_pages() %}
+        {% if page_num %}
+        {% if products.page == page_num %}
+        <a href="{{ url_for('home', page=page_num) }}" class="btn btn-info btn-sm mt-3"> {{ page_num }} </a>
+        {% else %}
+        <a href="{{ url_for('home', page=page_num) }}" class="btn btn-outline-info btn-sm mt-3"> {{ page_num }} </a>
+        {% endif %}
+        {% else %}
+        ...
+        {% endif %}
+        {% endfor %}
+       </div>
+      </div>
+      {% endif %}
+    </div>
+</div>
+ <!--==========List all product  START ============-->
+
+{% endblock content %}

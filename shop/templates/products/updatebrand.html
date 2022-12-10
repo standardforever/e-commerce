@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            {% include "_messages.html" %}
+
+            <!--============== Form for Updating Brands STARTS ===============-->
+            {% if updatebrand %}
+            <h1 class="text-center mt-5">Update a brand</h1>
+            <form action="" method="POST">
+                <input type="text" class="form-control" name="brand" value="{{ updatebrand.name }}">
+                <input type="submit" value="Update brand" class="btn btn-info mt-2">
+            </form>
+            <a href="{{ url_for('brands')}}" class="btn btn-warning" style="margin-top: -65px; margin-left: 140px;">Cancel</a>
+            
+            <!--============== Form for Updating Brands ENDS =====================-->
+
+            <!--==================== Form for Updating Category STARTS ==============-->
+            {% else %}
+            <h1 class="text-center mt-5">Update a category</h1>
+            <form action="" method="POST">
+                <input type="text" class="form-control" name="category" value="{{ updatecategory.name }}">
+                <input type="submit" value="Update category" class="btn btn-info mt-2">
+            </form>
+            <a href="{{ url_for('brands')}}" class="btn btn-warning" style="margin-top: -65px; margin-left: 150px;">Cancel</a>
+            {% endif %}
+
+            <!--============== Form for Updating Category ENDS ==================-->
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+
+
+{% endblock content %}
